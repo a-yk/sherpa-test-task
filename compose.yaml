@@ -1,0 +1,67 @@
+services:
+  database:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apppwd1}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+    networks:
+      - application
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - application
+
+  php-fpm:
+    build:
+      context: .
+      args:
+        USER_UID: ${UID:-1000}
+        USER_GID: ${GID:-1000}
+      dockerfile: ./docker/php.Dockerfile
+    container_name: catalog-master-container
+    working_dir: /var/www/app
+    volumes:
+      - .:/var/www/app:rw
+      - ./docker/supervisord/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:rw
+    depends_on:
+      - database
+      - rabbitmq
+    networks:
+      - application
+      - host_network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - .:/var/www/app:ro
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - database
+      - rabbitmq
+      - php-fpm
+    networks:
+      - application
+      - host_network
+
+volumes:
+  database_data:
+
+networks:
+  application:
+    internal: true
+  host_network:
+    driver: bridge

@@ -1,0 +1,11 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 animate-fade-in">
+  @if (listProducts$ | async; as productList) {
+    @for (product of productList.products; track product.id) {
+        <app-product [product]="product"></app-product>
+    }
+  }
+</div>
+
+@if (listProducts$ | async; as productList) {
+  <app-pagination (pageChange)="onPageChange($event)" [currentPage]="productList.page" [totalPages]="productList.total_pages"></app-pagination>
+}
