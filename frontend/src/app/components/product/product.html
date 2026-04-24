@@ -1,0 +1,28 @@
+<div
+  [routerLink]="['/product', product.id]"
+  class="cursor-pointer product-card bg-white rounded-2xl shadow-card border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow-xl group"
+>
+  <div class="relative overflow-hidden bg-indigo-50 flex justify-center items-center p-6 h-56">
+    <img src="{{ resourcesUrl }}/photos/{{ product.images[0].fileName }}" alt="{{ product.name }}" class="object-contain w-full h-full mix-blend-multiply group-hover:scale-105 transition duration-300">
+  </div>
+  <div class="p-5">
+    <div class="flex justify-between items-start">
+      <div>
+        <h3 class="font-bold text-gray-800 text-lg">{{ product.name }}</h3>
+        <div class="flex items-center mt-1">
+          <div class="flex text-yellow-400 text-sm">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+      </div>
+      <i class="far fa-heart text-gray-300 hover:text-red-400 transition cursor-pointer text-xl"></i>
+    </div>
+    <p class="text-gray-500 text-sm mt-2 line-clamp-2">{{ product.description }}</p>
+    <div class="mt-4 flex items-center justify-between">
+      <div>
+        <span class="text-2xl font-bold text-gray-900">₽{{ product.price }}</span>
+      </div>
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md transition flex items-center gap-1"><i class="fas fa-cart-plus"></i> Подробнее</button>
+    </div>
+  </div>
+</div>

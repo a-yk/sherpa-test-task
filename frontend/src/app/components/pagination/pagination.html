@@ -1,0 +1,9 @@
+<div class="flex justify-center mt-12 gap-2">
+  @for (i of [].constructor(totalPages); track $index) {
+    @if ($index + 1 === currentPage) {
+      <button class="px-4 py-2 bg-indigo-600 text-white rounded-xl shadow-sm text-sm font-medium">{{ $index + 1 }}</button>
+    } @else {
+      <button (click)="onPageChange($index + 1)" class="cursor-pointer px-4 py-2 border border-gray-300 rounded-xl text-gray-600 bg-white hover:bg-gray-50 transition text-sm">{{ $index + 1 }} </button>
+    }
+  }
+</div>
